@@ -1,154 +1,179 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Text;
 
 namespace NFormula.Internal
 {
-    internal sealed class Tokenizer
+    internal static class Tokenizer
     {
-        private static readonly Regex NumberRegex = new Regex(@"^\d+(\.\d+)?", RegexOptions.Compiled);
-
-        private static readonly Regex StringRegex =
-            new Regex("^\"([^\\\\\"]|\\\\.)*\"|^'([^\\\\']|\\\\.)*'", RegexOptions.Compiled);
-
-        private static readonly Regex VariableRegex = new Regex(@"^\$[a-zA-Z_][a-zA-Z0-9_\\.]*", RegexOptions.Compiled);
-        private static readonly Regex IdentifierRegex = new Regex(@"^[a-zA-Z_][a-zA-Z0-9_]*", RegexOptions.Compiled);
-        private static readonly Regex OperatorRegex = new Regex(@"^([+\-*/%=!<>&|?:.^#]{1,3})", RegexOptions.Compiled);
-
-        private Tokenizer()
+        private static readonly HashSet<char> OperatorChars = new HashSet<char>
         {
-        }
+            '+', '-', '*', '/', '%', '^', '=', '<', '>', '!', '&', '|', '?'
+        };
 
-        public static List<Token> Tokenize(
-            string input,
-            IEnumerable<IFunction> functions,
+        public static List<Token> Tokenize(string formula,
+            IEnumerable<IFunction> supportedFunctions,
             IEnumerable<IUnaryOperator> unaryOperators,
             IEnumerable<IBinaryOperator> binaryOperators)
         {
             var tokens = new List<Token>();
-            var pos = 0;
-            var length = input.Length;
+            var functionNames =
+                new HashSet<string>(supportedFunctions.Select(f => f.Name), StringComparer.OrdinalIgnoreCase);
+            var unaryOps = new HashSet<string>(unaryOperators.Select(op => op.Symbol));
+            var binaryOps = new HashSet<string>(binaryOperators.Select(op => op.Symbol));
 
-            while (pos < length)
+            var i = 0;
+            while (i < formula.Length)
             {
-                var ch = input[pos];
+                var c = formula[i];
 
-                // Skip whitespace
-                if (char.IsWhiteSpace(ch))
+                if (char.IsWhiteSpace(c))
                 {
-                    pos++;
+                    i++;
                     continue;
                 }
 
-                var remaining = input.Substring(pos);
-
                 // Number
-                var match =
-                    NumberRegex.Match(remaining);
-                if (match.Success)
+                if (char.IsDigit(c) || (c == '.' && i + 1 < formula.Length && char.IsDigit(formula[i + 1])))
                 {
-                    var number = match.Value;
-                    tokens.Add(new Token(TokenType.Number, number, double.Parse(number)));
-                    pos += number.Length;
+                    var start = i;
+                    var hasDot = false;
+
+                    while (i < formula.Length && (char.IsDigit(formula[i]) || formula[i] == '.'))
+                    {
+                        if (formula[i] == '.')
+                        {
+                            if (hasDot) break;
+                            hasDot = true;
+                        }
+
+                        i++;
+                    }
+
+                    var number = formula.Substring(start, i - start);
+                    tokens.Add(new Token(TokenType.Number, number, new LiteralValue(double.Parse(number))));
                     continue;
                 }
 
                 // String
-                match = StringRegex.Match(remaining);
-                if (match.Success)
+                if (c == '"')
                 {
-                    var str = match.Value;
-                    var val = str.Substring(1, str.Length - 2).Replace("\\\"", "\"").Replace("\\'", "'");
-                    tokens.Add(new Token(TokenType.String, str, val));
-                    pos += str.Length;
+                    i++; // skip opening "
+                    var sb = new StringBuilder();
+                    while (i < formula.Length && formula[i] != '"')
+                    {
+                        if (formula[i] == '\\' && i + 1 < formula.Length)
+                        {
+                            i++;
+                            sb.Append(formula[i]); // naive escape
+                        }
+                        else
+                        {
+                            sb.Append(formula[i]);
+                        }
+
+                        i++;
+                    }
+
+                    if (i >= formula.Length) throw new Exception("Unterminated string literal");
+                    i++; // skip closing "
+                    tokens.Add(new Token(TokenType.String, sb.ToString(), new LiteralValue(sb.ToString())));
                     continue;
                 }
 
                 // Boolean
-                if (remaining.StartsWith("true", StringComparison.OrdinalIgnoreCase) &&
-                    (remaining.Length == 4 || !char.IsLetterOrDigit(remaining[4])))
+                if (formula.Substring(i).StartsWith("true", StringComparison.OrdinalIgnoreCase) &&
+                    (i + 4 == formula.Length || !char.IsLetterOrDigit(formula[i + 4])))
                 {
-                    tokens.Add(new Token(TokenType.Boolean, "true", true));
-                    pos += 4;
+                    tokens.Add(new Token(TokenType.Boolean, "true", new LiteralValue(true)));
+                    i += 4;
                     continue;
                 }
 
-                if (remaining.StartsWith("false", StringComparison.OrdinalIgnoreCase) &&
-                    (remaining.Length == 5 || !char.IsLetterOrDigit(remaining[5])))
+                if (formula.Substring(i).StartsWith("false", StringComparison.OrdinalIgnoreCase) &&
+                    (i + 5 == formula.Length || !char.IsLetterOrDigit(formula[i + 5])))
                 {
-                    tokens.Add(new Token(TokenType.Boolean, "false", false));
-                    pos += 5;
+                    tokens.Add(new Token(TokenType.Boolean, "false", new LiteralValue(false)));
+                    i += 5;
                     continue;
                 }
 
-                // Variable
-                match = VariableRegex.Match(remaining);
-                if (match.Success)
+                // Variable {{...}}
+                if (formula[i] == '{' && i + 1 < formula.Length && formula[i + 1] == '{')
                 {
-                    tokens.Add(new Token(TokenType.Variable, match.Value, null));
-                    pos += match.Length;
+                    var start = i + 2;
+                    var end = formula.IndexOf("}}", start, StringComparison.Ordinal);
+                    if (end == -1) throw new Exception("Unterminated variable placeholder");
+
+                    var varContent = formula.Substring(start, end - start).Trim();
+                    tokens.Add(new Token(TokenType.Variable, "{{" + varContent + "}}", new LiteralValue(varContent)));
+                    i = end + 2;
                     continue;
                 }
 
-                // Function
-                match = IdentifierRegex.Match(remaining);
-                if (match.Success)
+                // Identifier (possible function)
+                if (char.IsLetter(c) || c == '_')
                 {
-                    var name = match.Value;
-                    if (IsFunction(name, functions) &&
-                        pos + name.Length < length &&
-                        input[pos + name.Length] == '(')
-                    {
-                        tokens.Add(new Token(TokenType.Function, name, null));
-                        pos += name.Length;
-                        continue;
-                    }
+                    var start = i;
+                    while (i < formula.Length && (char.IsLetterOrDigit(formula[i]) || formula[i] == '_')) i++;
+                    var name = formula.Substring(start, i - start);
+
+                    // Function
+                    if (!functionNames.Contains(name) || i >= formula.Length || formula[i] != '(')
+                        throw new Exception($"Unknown identifier: {name}");
+                    tokens.Add(new Token(TokenType.Function, name));
+                    continue;
                 }
 
                 // Operator
-                match = OperatorRegex.Match(remaining);
-                if (match.Success && IsOperator(match.Value, unaryOperators, binaryOperators))
+                if (OperatorChars.Contains(c))
                 {
-                    tokens.Add(new Token(TokenType.Operator, match.Value, match.Value));
-                    pos += match.Length;
+                    var op = TryReadOperator(formula, i, unaryOps, binaryOps);
+                    if (op == null)
+                        throw new Exception($"Unknown operator starting at {i}");
+
+                    tokens.Add(new Token(TokenType.Operator, op));
+                    i += op.Length;
                     continue;
                 }
 
-                // Punctuation
-                switch (ch)
+                switch (c)
                 {
+                    // Punctuation
                     case '(':
                         tokens.Add(new Token(TokenType.LeftParen, "(", null));
-                        pos++;
+                        i++;
                         continue;
                     case ')':
                         tokens.Add(new Token(TokenType.RightParen, ")", null));
-                        pos++;
+                        i++;
                         continue;
                     case ',':
                         tokens.Add(new Token(TokenType.Comma, ",", null));
-                        pos++;
+                        i++;
                         continue;
+                    default:
+                        throw new Exception($"Unexpected character at position {i}: {c}");
                 }
-
-                // Unknown
-                throw new InvalidOperationException("Unrecognized token at position " + pos + ": " + remaining);
             }
 
             tokens.Add(new Token(TokenType.End, "", null));
             return tokens;
         }
 
-        private static bool IsFunction(string name, IEnumerable<IFunction> functions)
+        private static string TryReadOperator(string formula, int pos, HashSet<string> unaryOps,
+            HashSet<string> binaryOps)
         {
-            var upper = name.ToUpperInvariant();
-            return functions.Any(f => f.Name.ToUpperInvariant() == upper);
-        }
+            var maxLen = Math.Min(3, formula.Length - pos);
+            for (var len = maxLen; len > 0; len--)
+            {
+                var candidate = formula.Substring(pos, len);
+                if (unaryOps.Contains(candidate) || binaryOps.Contains(candidate))
+                    return candidate;
+            }
 
-        private static bool IsOperator(string symbol, IEnumerable<IUnaryOperator> unaryOps, IEnumerable<IBinaryOperator> binaryOps)
-        {
-            return unaryOps.Any(op => op.Symbol == symbol) || binaryOps.Any(op => op.Symbol == symbol);
+            return null;
         }
     }
 }

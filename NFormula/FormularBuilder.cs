@@ -12,7 +12,7 @@ namespace NFormula
         {
         }
 
-        public INFormularParser Build()
+        public NFormularParser Build()
         {
             return new NFormularParser(_functions, _unaryOperators, _binaryOperators);
         }
