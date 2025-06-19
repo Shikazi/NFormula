@@ -5,7 +5,7 @@ VisualStudioVersion = 17.14.36203.30 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFormula", "NFormula\NFormula.csproj", "{B24214F3-571E-4EC5-BF24-19F86CA8DCC3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFormula", "src\NFormula\NFormula.csproj", "{B24214F3-571E-4EC5-BF24-19F86CA8DCC3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{07EA9707-E266-4FC1-9F2B-2A07170C91E0}"
 EndProject
