@@ -2,7 +2,10 @@
 
 **NFormula** is a lightweight .NET formula expression engine that allows you to parse and evaluate dynamic expressions written by end users.  
 It supports custom variables (`{{...}}`), pluggable functions and operators, and is built with extensibility and performance in mind.
+---
 
+[![NuGet](https://img.shields.io/nuget/v/NFormula.svg?style=flat-square)](https://www.nuget.org/packages/NFormula/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/NFormula.svg?style=flat-square)](https://www.nuget.org/packages/NFormula/)
 ---
 
 ## ✨ Features
