@@ -2,7 +2,7 @@ using System;
 
 namespace NFormula.Default.Operator.Logical
 {
-    internal class LogicalNotOperator : IUnaryOperator
+    public class LogicalNotOperator : IUnaryOperator
     {
         public DataType OperandType => DataType.Boolean;
         public DataType ReturnType => DataType.Boolean;

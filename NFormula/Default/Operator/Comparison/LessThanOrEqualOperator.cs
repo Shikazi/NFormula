@@ -2,7 +2,7 @@ using System;
 
 namespace NFormula.Default.Operator.Comparison
 {
-    internal class LessThanOrEqualOperator : IBinaryOperator
+    public class LessThanOrEqualOperator : IBinaryOperator
     {
         public DataType LeftType => DataType.Number;
         public DataType RightType => DataType.Number;

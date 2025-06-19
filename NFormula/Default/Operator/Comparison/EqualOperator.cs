@@ -2,7 +2,7 @@ using System;
 
 namespace NFormula.Default.Operator.Comparison
 {
-    internal class EqualBooleanOperator : IBinaryOperator
+    public class EqualBooleanOperator : IBinaryOperator
     {
         public DataType LeftType => DataType.Boolean;
         public DataType RightType => DataType.Boolean;
@@ -21,7 +21,7 @@ namespace NFormula.Default.Operator.Comparison
         }
     }
 
-    internal class NumberEqualOperator : IBinaryOperator
+    public class NumberEqualOperator : IBinaryOperator
     {
         public DataType LeftType => DataType.Number;
         public DataType RightType => DataType.Number;
@@ -43,7 +43,7 @@ namespace NFormula.Default.Operator.Comparison
         }
     }
 
-    internal class StringEqualOperator : IBinaryOperator
+    public class StringEqualOperator : IBinaryOperator
     {
         public DataType LeftType => DataType.String;
         public DataType RightType => DataType.String;

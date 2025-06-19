@@ -2,7 +2,7 @@ using System;
 
 namespace NFormula.Default.Operator.Arithmetic
 {
-    internal class DivideOperator : IBinaryOperator
+    public class DivideOperator : IBinaryOperator
     {
         public DataType LeftType => DataType.Number;
         public DataType RightType => DataType.Number;

@@ -2,7 +2,7 @@ using System;
 
 namespace NFormula.Default.Operator.Logical
 {
-    internal class LogicalAndOperator : IBinaryOperator
+    public class LogicalAndOperator : IBinaryOperator
     {
         public DataType LeftType => DataType.Boolean;
         public DataType RightType => DataType.Boolean;
