@@ -1,9 +1,13 @@
 
 # 🧠 NFormula
 
-**NFormula** is a powerful .NET library for parsing, evaluating, and extending user-defined expressions. It is designed for high extensibility and performance, making it ideal for rule engines, dynamic formulas, workflow automation, and more.
-
+[![NuGet](https://img.shields.io/nuget/v/NFormula.svg?style=flat-square)](https://www.nuget.org/packages/NFormula/)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/NFormula.svg?style=flat-square)](https://www.nuget.org/packages/NFormula/)
 ---
+
+**NFormula** is a powerful .NET library for parsing, evaluating, and extending user-defined expressions. It is designed for high extensibility and performance, making it ideal for rule engines, dynamic formulas, workflow automation, and more.
+---
+
 
 ## ✨ Features
 
