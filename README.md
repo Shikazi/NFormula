@@ -43,7 +43,7 @@ var data = new Dictionary<string, object>
     ["end"] = new DateTime(2024, 1, 10),
 };
 
-var expression = parser.Parse("IF_BOOL({{a}} > {{b}}, DATEDIFF({{end}}, {{start}}, \"day\"), 0)", data);
+var expression = parser.Parse("IF({{a}} > {{b}}, DATEDIFF({{end}}, {{start}}), 0)", data);
 var result = expression.Evaluate(data); // Result: 9
 ```
 
