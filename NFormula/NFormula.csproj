@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <PackageId>NFormula</PackageId>
-        <Version>0.1.0</Version>
+        <Version>0.1.1</Version>
         <Authors>Shikazi</Authors>
         <Company>Shikazi</Company>
         <Description>Formula parser and evaluator for Dictionary data with custom functions and variables.</Description>
@@ -11,6 +11,9 @@
         <PackageProjectUrl>https://github.com/shikazi/NFormula</PackageProjectUrl>
         <RepositoryUrl>https://github.com/shikazi/NFormula</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
-
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="" />
+    </ItemGroup>
 </Project>
