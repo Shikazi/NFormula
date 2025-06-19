@@ -36,3 +36,5 @@ jobs:
       with:
         name: nuget-package
         path: ./artifacts/*.nupkg
+    - name: Push to NuGet
+      run: dotnet nuget push ./artifacts/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_KEY }}
