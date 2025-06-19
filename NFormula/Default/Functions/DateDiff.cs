@@ -5,7 +5,7 @@ namespace NFormula.Default.Functions
 {
     public class DateDiff : IFunction
     {
-        public DataType[] ParameterTypes { get; } = { DataType.String, DataType.String };
+        public DataType[] ParameterTypes { get; } = { DataType.DateTime, DataType.DateTime };
         public DataType ReturnType => DataType.Number;
 
         public object Evaluate(IList<object> args)

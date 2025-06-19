@@ -2,7 +2,7 @@ using System;
 
 namespace NFormula.Default.Operator.Comparison
 {
-    public class EqualBooleanOperator : IBinaryOperator
+    public class BooleanEqualOperator : IBinaryOperator
     {
         public DataType LeftType => DataType.Boolean;
         public DataType RightType => DataType.Boolean;

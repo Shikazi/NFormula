@@ -1,3 +1,3 @@
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("NFormula.Tests")]
+[assembly: InternalsVisibleTo("NFormular.Tests")]

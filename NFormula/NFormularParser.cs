@@ -36,6 +36,11 @@ namespace NFormula
             }
         }
 
+        public static FormularBuilder CreateBuilder()
+        {
+            return new FormularBuilder();
+        }
+
         public IFormulaExpression Parse(string input, IVariableTypeProfiler profiler)
         {
             var tokens = Tokenizer.Tokenize(input, _functions, _unaryOps.Values.SelectMany(x => x),
@@ -159,7 +164,8 @@ namespace NFormula
                         stack.Push(new ConstantExpression(((LiteralValue)token.Metadata).Value, DataType.Boolean));
                         break;
                     case TokenType.Variable:
-                        stack.Push(new VariableExpression(token.Text, typeProfiler.GetDataType(token.Text)));
+                        var name = ((LiteralValue)token.Metadata).Value.ToString();
+                        stack.Push(new VariableExpression(name, typeProfiler.GetDataType(name)));
                         break;
 
                     case TokenType.Function:
