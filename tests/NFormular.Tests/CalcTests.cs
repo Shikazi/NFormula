@@ -5,7 +5,7 @@ namespace NFormular.Tests;
 [TestFixture]
 public class FormulaTests
 {
-    private VariableContext _dataContext;
+    private DictionaryDataContext _dataContext;
 
     [SetUp]
     public void Setup()
@@ -21,7 +21,7 @@ public class FormulaTests
             ["date1"] = new DateTime(2024, 1, 1),
             ["date2"] = new DateTime(2024, 1, 10),
         };
-        _dataContext = new VariableContext(data);
+        _dataContext = new DictionaryDataContext(data);
     }
 
     private NFormularParser CreateParser()
