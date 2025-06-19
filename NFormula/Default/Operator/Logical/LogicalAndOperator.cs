@@ -9,7 +9,7 @@ namespace NFormula.Default.Operator.Logical
         public DataType ReturnType => DataType.Boolean;
 
         public string Symbol => "&&";
-        public int Precedence => 5; // Cao hơn so sánh, thấp hơn phủ định
+        public int Precedence => 5; 
         public bool IsRightAssociative => false;
 
         public object Evaluate(object left, object right)

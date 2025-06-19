@@ -89,9 +89,17 @@ Includes NUnit tests for:
 
 ---
 
+## 🤖 Acknowledgements
 
-
+This project was initiated and developed with assistance from [ChatGPT](https://openai.com/chatgpt), which supported idea shaping, expression parsing logic, and extensibility design during early prototyping.
 ## 👨‍💻 Author
 
-Developed by **Shizazi**  
+
+Created by **Shikazi** (Chien Tran)
+
 Issues and PRs are welcome!
+
+## 📄 License
+
+Licensed under the [MIT License](LICENSE).  
+© 2025 Shikazi

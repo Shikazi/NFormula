@@ -1,7 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <PackageId>NFormula</PackageId>
+        <Version>0.1.0</Version>
+        <Authors>Shikazi</Authors>
+        <Company>Shikazi</Company>
+        <Description>Formula parser and evaluator for Dictionary data with custom functions and variables.</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/shikazi/NFormula</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/shikazi/NFormula</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+    </PropertyGroup>
 
 </Project>

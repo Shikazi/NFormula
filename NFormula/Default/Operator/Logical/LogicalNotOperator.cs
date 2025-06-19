@@ -8,7 +8,7 @@ namespace NFormula.Default.Operator.Logical
         public DataType ReturnType => DataType.Boolean;
 
         public string Symbol => "!";
-        public int Precedence => 4; // Ưu tiên cao hơn toán tử nhị phân
+        public int Precedence => 4;
         public bool IsRightAssociative => true;
 
         public object Evaluate(object operand)

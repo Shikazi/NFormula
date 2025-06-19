@@ -70,7 +70,7 @@ namespace NFormula
 
                     case TokenType.Function:
                         stack.Push(token);
-                        functionArgCount.Push(0); // Bắt đầu đếm tham số
+                        functionArgCount.Push(0); 
                         break;
 
                     case TokenType.Comma:
@@ -182,12 +182,12 @@ namespace NFormula
                             if (stack.Count < func.ParameterTypes.Length)
                                 continue;
 
-                            // Tạm pop ra các đối số, đảo ngược đúng thứ tự
+                           
                             var args = new List<IFormulaExpression>();
                             for (var i = 0; i < func.ParameterTypes.Length; i++)
                                 args.Insert(0, stack.Pop());
 
-                            // Kiểm tra số lượng tuyệt đối và kiểu dữ liệu khớp 100%
+                         
                             var matched = args.Count == func.ParameterTypes.Length &&
                                           args.Zip(func.ParameterTypes, (arg, expectedType) =>
                                               arg.ReturnType == expectedType
@@ -199,7 +199,6 @@ namespace NFormula
                                 goto EndFunctionCase;
                             }
 
-                            // Push lại nếu không match, để thử func khác
                             foreach (var arg in args)
                                 stack.Push(arg);
                         }
