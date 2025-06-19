@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFormula", "NFormula\NFormula.csproj", "{B24214F3-571E-4EC5-BF24-19F86CA8DCC3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{07EA9707-E266-4FC1-9F2B-2A07170C91E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NFormular.Tests", "tests\NFormular.Tests\NFormular.Tests.csproj", "{9274C4CD-AFEE-4486-8863-F3E4A66A625C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +21,17 @@ Global
 		{B24214F3-571E-4EC5-BF24-19F86CA8DCC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B24214F3-571E-4EC5-BF24-19F86CA8DCC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B24214F3-571E-4EC5-BF24-19F86CA8DCC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9274C4CD-AFEE-4486-8863-F3E4A66A625C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9274C4CD-AFEE-4486-8863-F3E4A66A625C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9274C4CD-AFEE-4486-8863-F3E4A66A625C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9274C4CD-AFEE-4486-8863-F3E4A66A625C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B24214F3-571E-4EC5-BF24-19F86CA8DCC3} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{9274C4CD-AFEE-4486-8863-F3E4A66A625C} = {07EA9707-E266-4FC1-9F2B-2A07170C91E0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EC52D2B7-2572-466C-B251-C16E4C39F95E}
