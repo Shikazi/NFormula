@@ -4,9 +4,6 @@
 It supports custom variables (`{{...}}`), pluggable functions and operators, and is built with extensibility and performance in mind.
 ---
 
-[![NuGet](https://img.shields.io/nuget/v/NFormula.svg?style=flat-square)](https://www.nuget.org/packages/NFormula/)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/NFormula.svg?style=flat-square)](https://www.nuget.org/packages/NFormula/)
----
 
 ## ✨ Features
 
@@ -30,8 +27,7 @@ dotnet add package NFormula
 
 ```csharp
 var parser = new NFormularParserBuilder()
-    .AddDefaultFunctions()
-    .AddDefaultOperators()
+    .AddDefault()
     .Build();
 
 var expr = parser.Parse("1 + 2 * 3");
