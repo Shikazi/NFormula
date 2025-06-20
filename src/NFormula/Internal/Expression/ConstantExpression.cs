@@ -6,6 +6,7 @@ namespace NFormula.Internal.Expression
     internal sealed class ConstantExpression : IFormulaExpression
     {
         private readonly object _value;
+        private DataType ReturnType { get; }
 
         public ConstantExpression(object value, DataType type)
         {
@@ -13,11 +14,15 @@ namespace NFormula.Internal.Expression
             ReturnType = type;
         }
 
-        public DataType ReturnType { get; }
 
         public object Evaluate(IEvaluationContext context)
         {
             return _value;
+        }
+
+        public DataType GetReturnType(IDataTypeContext context)
+        {
+            return ReturnType;
         }
     }
 }

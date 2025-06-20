@@ -35,7 +35,7 @@ public class FormulaTests
     public void Test_Addition_With_Variables()
     {
         var parser = CreateParser();
-        var expr = parser.Parse("{{number1}} + {{number2}}", _dataContext);
+        var expr = parser.Parse("{{number1}} + {{number2}}");
         var result = expr.Evaluate(_dataContext);
         Assert.That(result, Is.EqualTo(15));
     }
@@ -44,7 +44,7 @@ public class FormulaTests
     public void Test_Logical_And()
     {
         var parser = CreateParser();
-        var expr = parser.Parse("{{boolTrue}} && {{boolFalse}}", _dataContext);
+        var expr = parser.Parse("{{boolTrue}} && {{boolFalse}}");
         var result = expr.Evaluate(_dataContext);
         Assert.That(result, Is.False);
     }
@@ -53,7 +53,7 @@ public class FormulaTests
     public void Test_Equal_String()
     {
         var parser = CreateParser();
-        var expr = parser.Parse("{{text1}} == {{text2}}", _dataContext);
+        var expr = parser.Parse("{{text1}} == {{text2}}");
         var result = expr.Evaluate(_dataContext);
         Assert.That(result, Is.True);
     }
@@ -62,7 +62,7 @@ public class FormulaTests
     public void Test_Comparison_Greater_Than()
     {
         var parser = CreateParser();
-        var expr = parser.Parse("{{number1}} > {{number2}}", _dataContext);
+        var expr = parser.Parse("{{number1}} > {{number2}}");
         var result = expr.Evaluate(_dataContext);
         Assert.That(result, Is.True);
     }
@@ -71,7 +71,7 @@ public class FormulaTests
     public void Test_Nested_If_Function()
     {
         var parser = CreateParser();
-        var expr = parser.Parse("IF({{boolTrue}}, 100, 200)", _dataContext);
+        var expr = parser.Parse("IF({{boolTrue}}, 100, 200)");
         var result = expr.Evaluate(_dataContext);
         Assert.That(result, Is.EqualTo(100));
     }
@@ -80,7 +80,7 @@ public class FormulaTests
     public void Test_DateDiff_Function()
     {
         var parser = CreateParser();
-        var expr = parser.Parse("DATEDIFF({{date2}}, {{date1}})", _dataContext);
+        var expr = parser.Parse("DATEDIFF({{date2}}, {{date1}})");
         var result = expr.Evaluate(_dataContext);
         Assert.That(result, Is.EqualTo(9));
     }
@@ -89,7 +89,7 @@ public class FormulaTests
     public void Test_Complex_Expression_Mix()
     {
         var parser = CreateParser();
-        var expr = parser.Parse("IF({{number1}} > {{number2}}, {{number1}} + 5, {{number2}} - 2)", _dataContext);
+        var expr = parser.Parse("IF({{number1}} > {{number2}}, {{number1}} + 5, {{number2}} - 2)");
         var result = expr.Evaluate(_dataContext);
         Assert.That(result, Is.EqualTo(15));
     }
@@ -98,7 +98,7 @@ public class FormulaTests
     public void Test_Not_Operator()
     {
         var parser = CreateParser();
-        var expr = parser.Parse("!{{boolFalse}}", _dataContext);
+        var expr = parser.Parse("!{{boolFalse}}");
         var result = expr.Evaluate(_dataContext);
         Assert.That(result, Is.True);
     }

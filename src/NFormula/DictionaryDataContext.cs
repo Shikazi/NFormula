@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace NFormula
 {
     public class DictionaryDataContext
-        : IVariableTypeProfiler, IEvaluationContext
+        : IEvaluationContext
     {
         private readonly Dictionary<string, object> _data;
 
@@ -29,17 +29,7 @@ namespace NFormula
             return _data.ContainsKey(name);
         }
 
-        DataType IEvaluationContext.GetDataType(string name)
-        {
-            return GetDataTypeInternal(name);
-        }
-
-        DataType IVariableTypeProfiler.GetDataType(string name)
-        {
-            return GetDataTypeInternal(name);
-        }
-
-        private DataType GetDataTypeInternal(string name)
+        public DataType GetDataType(string name)
         {
             if (!_data.TryGetValue(name, out var value) || value == null)
             {

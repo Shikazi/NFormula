@@ -5,19 +5,21 @@ namespace NFormula.Internal.Expression
     /// </summary>
     internal sealed class VariableExpression : IFormulaExpression
     {
-        public VariableExpression(string name, DataType returnType)
+        public VariableExpression(string name)
         {
             Name = name;
-            ReturnType = returnType;
         }
 
         private string Name { get; }
 
-        public DataType ReturnType { get; }
-
         public object Evaluate(IEvaluationContext context)
         {
             return context.GetVariableValue(Name);
+        }
+
+        public DataType GetReturnType(IDataTypeContext context)
+        {
+            return context.GetDataType(Name);
         }
     }
 }

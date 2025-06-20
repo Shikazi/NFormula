@@ -41,12 +41,12 @@ namespace NFormula
             return new FormularBuilder();
         }
 
-        public IFormulaExpression Parse(string input, IVariableTypeProfiler profiler)
+        public IFormulaExpression Parse(string input)
         {
             var tokens = Tokenizer.Tokenize(input, _functions, _unaryOps.Values.SelectMany(x => x),
                 _binaryOps.Values.SelectMany(x => x));
             var postFix = ToPostfix(tokens);
-            var expression = BuildExpression(postFix, profiler);
+            var expression = BuildExpression(postFix);
             return expression;
         }
 
@@ -70,7 +70,7 @@ namespace NFormula
 
                     case TokenType.Function:
                         stack.Push(token);
-                        functionArgCount.Push(0); 
+                        functionArgCount.Push(0);
                         break;
 
                     case TokenType.Comma:
@@ -115,10 +115,7 @@ namespace NFormula
                             var argCount = functionArgCount.Pop();
                             if (prevToken?.Type != TokenType.LeftParen)
                                 argCount++;
-                            if (func.Metadata is FunctionMetadata fm)
-                            {
-                                fm.ArgCount = argCount;
-                            }
+                            func.SetMetadata(new FunctionMetadata(argCount));
 
                             output.Add(func);
                         }
@@ -146,7 +143,7 @@ namespace NFormula
             return output;
         }
 
-        private IFormulaExpression BuildExpression(List<Token> postfix, IVariableTypeProfiler typeProfiler)
+        private IFormulaExpression BuildExpression(List<Token> postfix)
         {
             var stack = new Stack<IFormulaExpression>();
 
@@ -155,17 +152,17 @@ namespace NFormula
                 switch (token.Type)
                 {
                     case TokenType.Number:
-                        stack.Push(new ConstantExpression(((LiteralValue)token.Metadata).Value, DataType.Number));
+                        stack.Push(new ConstantExpression(token.GetMetadata<LiteralValue>().Value, DataType.Number));
                         break;
                     case TokenType.String:
-                        stack.Push(new ConstantExpression(((LiteralValue)token.Metadata).Value, DataType.String));
+                        stack.Push(new ConstantExpression(token.GetMetadata<LiteralValue>().Value, DataType.String));
                         break;
                     case TokenType.Boolean:
-                        stack.Push(new ConstantExpression(((LiteralValue)token.Metadata).Value, DataType.Boolean));
+                        stack.Push(new ConstantExpression(token.GetMetadata<LiteralValue>().Value, DataType.Boolean));
                         break;
                     case TokenType.Variable:
-                        var name = ((LiteralValue)token.Metadata).Value.ToString();
-                        stack.Push(new VariableExpression(name, typeProfiler.GetDataType(name)));
+                        var name = token.GetMetadata<LiteralValue>().Value.ToString();
+                        stack.Push(new VariableExpression(name));
                         break;
 
                     case TokenType.Function:
@@ -173,40 +170,13 @@ namespace NFormula
                         var candidates = _functions
                             .Where(f => f.Name.Equals(token.Text, StringComparison.OrdinalIgnoreCase))
                             .ToList();
-
                         if (candidates.Count == 0)
                             throw new Exception("Unknown function: " + token.Text);
-
-                        foreach (var func in candidates)
-                        {
-                            if (stack.Count < func.ParameterTypes.Length)
-                                continue;
-
-                           
-                            var args = new List<IFormulaExpression>();
-                            for (var i = 0; i < func.ParameterTypes.Length; i++)
-                                args.Insert(0, stack.Pop());
-
-                         
-                            var matched = args.Count == func.ParameterTypes.Length &&
-                                          args.Zip(func.ParameterTypes, (arg, expectedType) =>
-                                              arg.ReturnType == expectedType
-                                          ).All(x => x);
-
-                            if (matched)
-                            {
-                                stack.Push(new FunctionExpression(func, args.ToArray()));
-                                goto EndFunctionCase;
-                            }
-
-                            foreach (var arg in args)
-                                stack.Push(arg);
-                        }
-
-                        throw new Exception(
-                            $"No matching overload found for function '{token.Text}' with exact argument types.");
-
-                        EndFunctionCase:
+                        var args = new List<IFormulaExpression>();
+                        var argCount = token.GetMetadata<FunctionMetadata>().ArgCount;
+                        for (var i = 0; i < argCount; i++)
+                            args.Insert(0, stack.Pop());
+                        stack.Push(new FunctionExpression(candidates, args.ToArray()));
                         break;
                     }
 
@@ -214,24 +184,22 @@ namespace NFormula
                         if (_unaryOps.TryGetValue(token.Text, out var uopList))
                         {
                             var operand = stack.Pop();
-                            var op = uopList.FirstOrDefault(o => o.OperandType == operand.ReturnType);
-                            if (op == null)
+                            if (uopList == null)
                                 throw new Exception(
-                                    $"No matching unary operator '{token.Text}' for type {operand.ReturnType}");
+                                    $"No matching unary operator '{token.Text}'");
 
-                            stack.Push(new UnaryOperatorExpression(operand, op));
+                            stack.Push(new UnaryOperatorExpression(operand, uopList));
                         }
                         else if (_binaryOps.TryGetValue(token.Text, out var bopList))
                         {
                             var right = stack.Pop();
                             var left = stack.Pop();
-                            var op = bopList.FirstOrDefault(o =>
-                                o.LeftType == left.ReturnType && o.RightType == right.ReturnType);
-                            if (op == null)
-                                throw new Exception(
-                                    $"No matching binary operator '{token.Text}' for types {left.ReturnType}, {right.ReturnType}");
 
-                            stack.Push(new BinaryOperatorExpression(left, right, op));
+                            if (bopList == null)
+                                throw new Exception(
+                                    $"No matching binary operator '{token.Text}' ");
+
+                            stack.Push(new BinaryOperatorExpression(left, right, bopList));
                         }
                         else
                         {
