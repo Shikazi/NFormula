@@ -52,6 +52,7 @@ namespace NFormula.Internal
                     }
 
                     var number = formula.Substring(start, i - start);
+                    
                     tokens.Add(new Token(TokenType.Number, number, new LiteralValue(double.Parse(number))));
                     continue;
                 }

@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 namespace NFormula.Internal.Expression
 {
     /// <summary>
@@ -5,26 +9,39 @@ namespace NFormula.Internal.Expression
     /// </summary>
     internal sealed class FunctionExpression : IFormulaExpression
     {
-        private readonly IFunction _function;
+        private readonly IEnumerable<IFunction> _availableFunctions;
         private readonly IFormulaExpression[] _arguments;
 
-        public FunctionExpression(IFunction function, IFormulaExpression[] arguments)
+        public FunctionExpression(IEnumerable<IFunction> availableFunctions, IFormulaExpression[] arguments)
         {
-            _function = function;
             _arguments = arguments;
+            _availableFunctions = availableFunctions;
         }
 
-        public DataType ReturnType => _function.ReturnType;
+        private IFunction GetMatchFunction(IDataTypeContext context)
+        {
+            var argumentTypes = _arguments.Select(x => x.GetReturnType(context));
+            return _availableFunctions.FirstOrDefault(x => x.ParameterTypes.SequenceEqual(argumentTypes));
+        }
 
         public object Evaluate(IEvaluationContext context)
         {
+            var matchFunction = GetMatchFunction(context);
             var args = new object[_arguments.Length];
             for (var i = 0; i < _arguments.Length; i++)
             {
                 args[i] = _arguments[i].Evaluate(context);
             }
 
-            return _function.Evaluate(args);
+            return matchFunction.Evaluate(args);
+        }
+
+        public DataType GetReturnType(IDataTypeContext context)
+        {
+            var matchFunction = GetMatchFunction(context);
+            if (matchFunction == null)
+                throw new Exception("Can't find matching function");
+            return matchFunction.ReturnType;
         }
     }
 }
