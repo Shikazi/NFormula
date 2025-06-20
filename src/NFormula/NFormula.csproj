@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <PackageId>NFormula</PackageId>
-        <Version>0.1.3</Version>
+        <Version>0.1.4</Version>
         <Authors>Shikazi</Authors>
         <Company>Shikazi</Company>
         <Description>Formula parser and evaluator for Dictionary data with custom functions and variables.</Description>
