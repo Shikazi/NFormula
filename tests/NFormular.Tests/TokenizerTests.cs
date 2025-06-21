@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.JavaScript;
 using NFormula;
 using NFormula.Default.Functions;
 using NFormula.Default.Operator.Arithmetic;
@@ -27,10 +28,15 @@ public class TokenizerTests
         new StringEqualOperator(),
         new NumberEqualOperator(),
         new BooleanEqualOperator(),
-        new GreaterThanOperator(),
-        new GreaterThanOrEqualOperator(),
-        new LessThanOperator(),
-        new LessThanOrEqualOperator()
+        new NumberGreaterThanOperator(),
+        new NumberGreaterThanOrEqualOperator(),
+        new NumberLessThanOperator(),
+        new NumberLessThanOrEqualOperator(),
+        new DateTimeEqualOperator(),
+        new DatetimeGreaterThanOperator(),
+        new DateTimeGreaterThanOrEqualOperator(),
+        new DateTimeLessThanOperator(),
+        new DateTimeLessThanOrEqualOperator(),
     ];
 
     private readonly List<IFunction> _functions =
