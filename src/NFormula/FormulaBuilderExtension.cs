@@ -2,6 +2,7 @@ using NFormula.Default.Functions;
 using NFormula.Default.Operator.Arithmetic;
 using NFormula.Default.Operator.Comparison;
 using NFormula.Default.Operator.Logical;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace NFormula
 {
@@ -41,10 +42,15 @@ namespace NFormula
             builder.AddBinaryOperator<StringEqualOperator>();
             builder.AddBinaryOperator<NumberEqualOperator>();
             builder.AddBinaryOperator<BooleanEqualOperator>();
-            builder.AddBinaryOperator<GreaterThanOperator>();
-            builder.AddBinaryOperator<GreaterThanOrEqualOperator>();
-            builder.AddBinaryOperator<LessThanOperator>();
-            builder.AddBinaryOperator<LessThanOrEqualOperator>();
+            builder.AddBinaryOperator<NumberGreaterThanOperator>();
+            builder.AddBinaryOperator<NumberGreaterThanOperator>();
+            builder.AddBinaryOperator<NumberLessThanOperator>();
+            builder.AddBinaryOperator<NumberLessThanOrEqualOperator>();
+            builder.AddBinaryOperator<DateTimeEqualOperator>();
+            builder.AddBinaryOperator<DatetimeGreaterThanOperator>();
+            builder.AddBinaryOperator<DateTimeGreaterThanOrEqualOperator>();
+            builder.AddBinaryOperator<DateTimeLessThanOperator>();
+            builder.AddBinaryOperator<DateTimeLessThanOrEqualOperator>();
 
             // Functions
             builder.AddFunction<IfBooleanFunction>();
